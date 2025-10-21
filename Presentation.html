@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Family, Religion, and Moral Values — Presentation</title>
+<style>
+  :root{
+    --slide-w: 1280px; /* 16:9 base */
+    --slide-h: 720px;
+    --bg-overlay: rgba(10,10,10,0.45);
+    --accent-1: #14305B; /* islamic dark blue */
+    --accent-2: #964B00; /* warm brown */
+    --accent-3: #800040; /* rich magenta */
+    --accent-4: #1E90FF; /* modern blue */
+    --text-light: #ffffff;
+    --text-dark: #222;
+    --radius: 18px;
+    --frame-width: 12px;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  html,body{
+    height:100%;
+    margin:0;
+    background:#111;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  /* Slide stage (keeps 16:9 aspect) */
+  .stage {
+    width: min(96vw, calc(var(--slide-w) * 0.9));
+    aspect-ratio: 16 / 9;
+    background: #000;
+    box-shadow: 0 18px 60px rgba(0,0,0,0.7);
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Each slide (absolute stacking) */
+  .slide {
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    padding:28px;
+    box-sizing:border-box;
+    opacity:0;
+    transform: scale(0.99);
+    transition: opacity .45s ease, transform .45s ease;
+    pointer-events:none;
+  }
+  .slide.visible{
+    opacity:1;
+    transform: scale(1);
+    pointer-events:auto;
+  }
+
+  /* Background image cover */
+  .slide .bg {
+    position:absolute;
+    inset:0;
+    background-size:cover;
+    background-position:center;
+    filter: saturate(1.05) contrast(0.95);
+    z-index:0;
+  }
+  /* overlay to improve readability */
+  .slide .overlay {
+    position:absolute;
+    inset:0;
+    background: var(--bg-overlay);
+    z-index:1;
+  }
+
+  /* decorative frame */
+  .frame {
+    position:absolute;
+    inset:18px;
+    border-radius: calc(var(--radius) + 6px);
+    box-shadow: inset 0 0 0 var(--frame-width) rgba(255,255,255,0.05);
+    z-index:2;
+    pointer-events:none;
+  }
+
+  /* content area */
+  .content {
+    position:relative;
+    z-index:3;
+    color:var(--text-light);
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+    height:100%;
+  }
+
+  .left-col{
+    width:62%;
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    justify-content:flex-start;
+    align-items:flex-start;
+  }
+
+  .title {
+    font-size: clamp(24px, 3.2vw, 44px);
+    font-weight:700;
+    letter-spacing:0.2px;
+    margin:0;
+    text-shadow: 0 3px 12px rgba(0,0,0,0.6);
+  }
+  .subtitle {
+    font-size: clamp(14px, 1.6vw, 22px);
+    opacity:0.95;
+    margin:0;
+  }
+
+  .right-col{
+    width:36%;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding:18px;
+  }
+
+  /* decorative card on right */
+  .decor-card{
+    width:100%;
+    height:100%;
+    border-radius:12px;
+    padding:18px;
+    box-sizing:border-box;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    backdrop-filter: blur(2px);
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    color:var(--text-light);
+  }
+
+  /* Navigation buttons */
+  .nav {
+    position:absolute;
+    z-index:10;
+    left:18px;
+    bottom:18px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .nav .btn{
+    background:rgba(0,0,0,0.5);
+    color:var(--text-light);
+    border:1px solid rgba(255,255,255,0.08);
+    padding:10px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .nav .btn:active{ transform:translateY(1px); }
+
+  .top-right {
+    position:absolute;
+    right:18px;
+    top:18px;
+    z-index:10;
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  .page-indicator{
+    background: rgba(0,0,0,0.45);
+    color:var(--text-light);
+    padding:8px 12px;
+    border-radius:10px;
+    font-weight:600;
+  }
+    /* small footer */
+  .footer {
+    position:absolute;
+    z-index:10;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:12px;
+    color:rgba(255,255,255,0.7);
+    font-size:12px;
+    background: rgba(0,0,0,0.35);
+    padding:6px 10px;
+    border-radius:8px;
+  }
+
+  /* Responsive tweaks */
+  @media (max-width:720px){
+    .stage{ width: 96vw; border-radius:10px; }
+    .left-col{ width:100%; }
+    .right-col{ display:none; }
+    .title{ font-size:20px; }
+  }
+
+  /* Section accent classes - used to color borders/decorations */
+  .accent-1 .frame { box-shadow: inset 0 0 0 var(--frame-width) rgba(20,48,88,0.9); }
+  .accent-2 .frame { box-shadow: inset 0 0 0 var(--frame-width) rgba(150,75,0,0.9); }
+  .accent-3 .frame { box-shadow: inset 0 0 0 var(--frame-width) rgba(128,0,64,0.9); }
+  .accent-4 .frame { box-shadow: inset 0 0 0 var(--frame-width) rgba(30,144,255,0.9); }
+
+  /* small ornament in corner */
+  .ornament {
+    position:absolute;
+    z-index:9;
+    right:28px;
+    bottom:28px;
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--text-dark);
+    font-weight:700;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage" aria-label="Presentation stage">
+  <!-- Slides will be injected here -->
+</div>
+
+<!-- Controls -->
+<div class="nav" id="nav">
+  <div class="btn" id="prevBtn" title="Previous (Left arrow)">← Prev</div>
+  <div class="btn" id="nextBtn" title="Next (Right arrow)">Next →</div>
+</div>
+
+<div class="top-right">
+  <div class="page-indicator" id="pageIndicator">1 / 20</div>
+</div>
+
+<div class="footer">Use ← and → keys to navigate • Saved for presentation</div>
+
+<script>
+/*
+  Single-file slide presentation.
+  - Save as .html and open in browser (Brackets Live Preview works).
+  - Contains 20 slides with backgrounds (URLs) and decorations.
+*/
+
+// Slide data (title, text, background URL)
+const SLIDES = [
+  ["Family, Religion, and Moral Values",
+   "By: Sayfullayev Asliddin\nA presentation about family, faith, and moral values.",
+   "https://upload.wikimedia.org/wikipedia/commons/8/83/Family_portrait_photo.jpg"],
+
+  ["Family in Islam",
+   "Family is the foundation of Islamic society. It teaches love, respect, honesty, and responsibility. Through family, faith and traditions are passed to the next generation.",
+   "https://upload.wikimedia.org/wikipedia/commons/6/63/Blue_Mosque%2C_Istanbul%2C_Turkey_%282%29.jpg"],
+
+  ["Marriage and Unity",
+   "Marriage (nikah) is a sacred contract in Islam. It builds mutual love, trust, and loyalty between husband and wife. A strong marriage creates a strong family and community.",
+   "https://upload.wikimedia.org/wikipedia/commons/9/9f/Wedding_rings.jpg"],
+
+  ["The Role of Parents",
+   "Parents are highly respected in Islam. Caring for them is an act of worship. They guide their children with wisdom and compassion.",
+   "https://upload.wikimedia.org/wikipedia/commons/5/5c/Parents_with_children.jpg"],
+
+  ["Children as Blessings",
+   "Children are a gift from Allah. Parents must raise them with good manners, education, and faith. The love between parents and children creates peace in the home.",
+   "https://upload.wikimedia.org/wikipedia/commons/1/17/Family_gathering_Eid.jpg"],
+
+  ["Family Ties and Community",
+   "Muslim families value relationships with relatives. They visit, support, and help one another. Strong families create unity within the community.",
+   "https://upload.wikimedia.org/wikipedia/commons/9/9e/Family_home_dinner.jpg"],
+
+  ["My Family",
+   "There are six people in my family: my father, my mother, two brothers, my little sister, and me. We share love, respect, and happiness that keep us united.",
+   "https://upload.wikimedia.org/wikipedia/commons/f/f0/Market_stall.jpg"],
+
+  ["My Father's Example",
+   "My father is a trader who values honesty and hard work as part of his faith. He follows Islamic principles and is proud of his work.",
+   "https://upload.wikimedia.org/wikipedia/commons/2/2b/Mother_reading_to_children.jpg"],
+    ["My Mother's Love",
+   "My mother is kind and patient. She teaches us to pray, be thankful, and respect others. Her love makes our home peaceful and warm.",
+   "https://upload.wikimedia.org/wikipedia/commons/3/3a/Grandfather_with_grandchildren.jpg"],
+
+  ["Lessons from Elders",
+   "My grandfather taught us that hard work is the key to success. He believed people should never stop improving themselves. Our family values come from ancestors' wisdom.",
+   "https://upload.wikimedia.org/wikipedia/commons/7/77/Family_praying.jpg"],
+
+  ["Religious Life in My Family",
+   "We pray five times a day, read the Qur'an, and thank Allah for His blessings. Our day begins with Bismillah and ends with Alhamdulillah.",
+   "https://upload.wikimedia.org/wikipedia/commons/8/89/Helping_hands.jpg"],
+
+  ["Moral Values in Daily Life",
+   "We practice honesty, generosity, and patience. We help the poor and respect our neighbors. Kindness is the main rule in our home.",
+   "https://upload.wikimedia.org/wikipedia/commons/4/48/Family_working_together.jpg"],
+
+  ["Roles of Men and Women",
+   "Men and women have equal respect in our family. Both share duties and help each other. Islam teaches fairness and balance in all relationships.",
+   "https://upload.wikimedia.org/wikipedia/commons/6/6b/Traditional_clothes_family.jpg"],
+
+  ["Clothing and Modesty",
+   "We dress modestly as Islam teaches. Our clothes reflect respect for faith and culture. Modesty is beauty, both inside and outside.",
+   "https://upload.wikimedia.org/wikipedia/commons/0/0b/Parent_guiding_child.jpg"],
+
+  ["Parents' Influence",
+   "Our parents guide us through example, not only words. Their honesty and faith inspire us to be better people.",
+   "https://upload.wikimedia.org/wikipedia/commons/6/6b/Books_and_Quran.jpg"],
+
+  ["Education and Upbringing",
+   "We are encouraged to study hard, stay polite, and be curious. Knowledge helps us understand faith and life better.",
+   "https://upload.wikimedia.org/wikipedia/commons/1/19/Hands_together_unity.jpg"],
+
+  ["Peace and Tolerance",
+   "We respect people of all faiths and backgrounds. Peace at home builds peace in society. Tolerance is part of our religious values.",
+   "https://upload.wikimedia.org/wikipedia/commons/0/04/Community_service.jpg"],
+
+  ["Halal and Haram",
+   "We eat halal food and avoid haram actions. Living a halal life means living with honesty and purity.",
+   "https://upload.wikimedia.org/wikipedia/commons/c/c4/Halal_food_meal.jpg"],
+
+  ["Work and Faith",
+   "Hard work and honesty are forms of worship. The honest trader will be remembered for dignity and trust in the community.",
+   "https://upload.wikimedia.org/wikipedia/commons/5/56/Worker_at_work.jpg"],
+
+  ["Conclusion",
+   "Family is where love and faith begin. Strong families create peaceful societies. The values we learn at home guide us forever.",
+   "https://upload.wikimedia.org/wikipedia/commons/0/0f/Family_silhouette_heart.jpg"]
+];
+
+// Build slides
+const stage = document.getElementById("stage");
+
+SLIDES.forEach((s,i) => {
+  const [title, text, bgUrl] = s;
+  const slideEl = document.createElement("section");
+  slideEl.className = "slide";
+
+  // pick accent based on block
+  const accentClass = (i < 5) ? "accent-1" : (i < 10) ? "accent-2" : (i < 15) ? "accent-3" : "accent-4";
+  slideEl.classList.add(accentClass);
+
+  // background
+  const bg = document.createElement("div");
+  bg.className = "bg";
+  bg.style.backgroundImage = url('${bgUrl}');
+  slideEl.appendChild(bg);
+
+  // overlay
+  const overlay = document.createElement("div");
+  overlay.className = "overlay";
+  slideEl.appendChild(overlay);
+
+  // frame
+  const frame = document.createElement("div");
+  frame.className = "frame";
+  slideEl.appendChild(frame);
+
+  // content
+  const content = document.createElement("div");
+  content.className = "content";
+    const left = document.createElement("div");
+  left.className = "left-col";
+  const h = document.createElement("h1");
+  h.className = "title";
+  h.textContent = title;
+  const p = document.createElement("p");
+  p.className = "subtitle";
+  // keep line breaks
+  p.innerHTML = text.replace(/\n/g, "<br>");
+  left.appendChild(h);
+  left.appendChild(p);
+
+  const right = document.createElement("div");
+  right.className = "right-col";
+  const card = document.createElement("div");
+  card.className = "decor-card";
+  // small decorative content - a short summary or icon
+  const cardTxt = document.createElement("div");
+  cardTxt.style.textAlign = "center";
+  cardTxt.innerHTML = "<strong>Slide</strong><br>" + (i+1);
+  card.appendChild(cardTxt);
+  right.appendChild(card);
+
+  content.appendChild(left);
+  content.appendChild(right);
+
+  slideEl.appendChild(content);
+
+  // ornament (corner circle)
+  const ornament = document.createElement("div");
+  ornament.className = "ornament";
+  ornament.style.background = (i < 5) ? "gold" : (i < 10) ? "orange" : (i < 15) ? "#00a64f" : "#4682b4";
+  ornament.textContent = i+1;
+  slideEl.appendChild(ornament);
+
+  stage.appendChild(slideEl);
+});
+
+// Navigation & logic
+let current = 0;
+const slides = Array.from(document.querySelectorAll(".slide"));
+const total = slides.length;
+const pageIndicator = document.getElementById("pageIndicator");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+function showSlide(index){
+  if(index < 0) index = 0;
+  if(index >= total) index = total - 1;
+  slides.forEach((sl, idx) => {
+    sl.classList.toggle("visible", idx === index);
+  });
+  current = index;
+  pageIndicator.textContent = ${current+1} / ${total};
+  // focus stage for keyboard nav
+  document.activeElement.blur();
+}
+
+prevBtn.addEventListener("click", () => {
+  showSlide(current - 1);
+});
+nextBtn.addEventListener("click", () => {
+  showSlide(current + 1);
+});
+
+// keyboard navigation
+window.addEventListener("keydown", (e) => {
+  if(e.key === "ArrowRight" || e.key === "PageDown") showSlide(current + 1);
+  if(e.key === "ArrowLeft" || e.key === "PageUp") showSlide(current - 1);
+  if(e.key === "Home") showSlide(0);
+  if(e.key === "End") showSlide(total-1);
+});
+
+// touch swipe support (simple)
+let touchStartX = null;
+stage.addEventListener("touchstart", (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+stage.addEventListener("touchend", (e) => {
+  if(touchStartX === null) return;
+  const dx = e.changedTouches[0].screenX - touchStartX;
+  if(dx < -40) showSlide(current + 1);
+  if(dx > 40) showSlide(current - 1);
+  touchStartX = null;
+});
+
+// lazy load backgrounds and fallback handling
+slides.forEach((sl, idx) => {
+  const bg = sl.querySelector(".bg");
+  const url = bg.style.backgroundImage.slice(5, -2);
+  // test image loading
+  const img = new Image();
+  img.onload = () => {
+    // success — nothing else needed
+  };
+  img.onerror = () => {
+    // fallback color background if image fails
+    bg.style.backgroundImage = "none";
+    bg.style.background = idx < 5 ? "linear-gradient(120deg,#0f2746,#14305B)" :
+                       idx < 10 ? "linear-gradient(120deg,#6b3f1a,#964B00)" :
+                       idx < 15 ? "linear-gradient(120deg,#5a0033,#800040)" :
+                       "linear-gradient(120deg,#0b5f9a,#1E90FF)";
+  };
+  img.src = url;
+});
+
+// show first slide
+showSlide(0);
+
+// allow clicking stage to go next
+stage.addEventListener("click", (e)=>{
+  // if clicking on nav controls, ignore
+  const target = e.target;
+  if(target.closest(".btn")) return;
+  showSlide(current + 1);
+});
+
+// Optional: print-friendly / export hint
+console.log("Presentation ready. Open this file in a browser (Brackets Live Preview recommended). Use ← and → to navigate.");
+
+</script>
+</body>
+</html>
